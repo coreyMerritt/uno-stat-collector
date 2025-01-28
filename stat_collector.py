@@ -4,7 +4,7 @@ import sys
 import threading
 import time
 from typing import List
-from entities.Stopwatch import Stopwatch
+from utilities.Stopwatch import Stopwatch
 from entities.Player import Player
 from entities.Game import Game
 from entities.players.aggressive_agatha import AggressiveAgatha
