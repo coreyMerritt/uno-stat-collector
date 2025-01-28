@@ -6,6 +6,7 @@ from entities.Hand import Hand
 from entities.Deck import Deck
 from enums.Card_Color import CardColor
 from enums.Card_Number import CardNumber
+from utilities.Logger import Logger
 
 
 class Player(ABC):
@@ -41,7 +42,7 @@ class Player(ABC):
 
   def drawAndPlay(self, deck: Deck, faceColor: CardColor, faceNumber: CardNumber):
     newCard = deck.draw()
-    print(f"\t\t{self.name} drew a {newCard.color.value} {newCard.number.value}")
+    Logger.cardDrawn(self.name, newCard)
     if self.isLegalCard(newCard, faceColor, faceNumber):
       return newCard
     else:

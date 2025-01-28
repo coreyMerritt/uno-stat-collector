@@ -9,6 +9,7 @@ from entities.players.colorful_colin import ColorfulColin
 from entities.players.random_randy import RandomRandy
 from enums.Card_Color import CardColor
 from enums.Card_Number import CardNumber
+from utilities.Logger import Logger
 
 
 class Game:
@@ -44,7 +45,7 @@ class Game:
 
   def drawInitialFacecard(self):
     card = self.deck.draw()
-    print(f"\tThe face card is a {card.color.value} {card.number.value}!")
+    Logger.faceCardPlayed(card)
     self.playCard(card, True)
     self.setNextActivePlayer()
 
@@ -55,7 +56,7 @@ class Game:
     else:
       activeDealer = self.getNextPlayerClockwise(self.activeDealer)
 
-    print(f"\t{activeDealer.name} is the dealer.")
+    Logger.dealerAssigned(activeDealer.name)
     self.activeDealer = activeDealer
 
 
@@ -85,7 +86,7 @@ class Game:
           i = peopleInGame - 1
       nextPlayer = self.players[i]
       nextPlayer.hand.cards.append(card)
-      print(f"\t\t{nextPlayer.name} was dealt a {card.color.value} {card.number.value}")
+      Logger.cardDealt(nextPlayer.name, card)
 
 
   def playUntilWinner(self):
@@ -111,7 +112,7 @@ class Game:
   def playCard(self, card: Card, system=False):
     if not system:
       player = self.activePlayer
-      print(f"\t{player.name} played a {card.color.value} {card.number.value}")
+      Logger.cardPlayed(player.name, card)
     else:
       player = self.activeDealer
     
@@ -121,7 +122,7 @@ class Game:
     else:
       self.executeEffect(card.number, player)
       color = player.pickFaceColor()
-      print(f"\t{player.name} chose {color.value}!")
+      Logger.colorPicked(player.name, color)
       self.setFacecard(card, color, card.number)
 
     
@@ -156,7 +157,7 @@ class Game:
       if player != self.activePlayer:
         for i in range(4):
           card = self.deck.draw()
-          print(f"\t\t{player.name} drew a {card.color.value} {card.number.value}")
+          Logger.cardDrawn(player.name, card)
           player.hand.cards.append(card)
 
 
@@ -165,14 +166,14 @@ class Game:
       if player != self.activePlayer:
         for i in range(2):
           card = self.deck.draw()
-          print(f"\t\t{player.name} drew a {card.color.value} {card.number.value}")
+          Logger.cardDrawn(player.name, card)
           player.hand.cards.append(card)
   
 
   def discardAllOfOneColor(self):
     cardsToDiscard = self.activePlayer.discardAllOfOneColor()
     for card in cardsToDiscard:
-      print(f"\t\t{self.activePlayer.name} discards a {card.color.value} {card.number.value}")
+      Logger.cardDiscarded(self.activePlayer.name, card)
       self.deck.discard.append(card)
 
 
@@ -181,7 +182,7 @@ class Game:
       card = self.deck.draw()
       player = self.getNextPlayer()
       player.hand.cards.append(card)
-      print(f"\t\t{player.name} drew a {card.color.value} {card.number.value}")
+      Logger.cardDrawn(player.name, card)
 
 
   def drawTwo(self):
@@ -189,7 +190,7 @@ class Game:
       card = self.deck.draw()
       player = self.getNextPlayer()
       player.hand.cards.append(card)
-      print(f"\t\t{player.name} drew a {card.color.value} {card.number.value}")
+      Logger.cardDrawn(player.name, card)
 
 
   def reverse(self):
@@ -211,7 +212,7 @@ class Game:
 
   def skip(self):
     self.activePlayer = self.getNextPlayer()
-    print(f"\t\t{self.activePlayer.name} is skipped!")
+    Logger.playerSkipped(self.activePlayer.name)
 
 
   def swapHands(self):
@@ -225,8 +226,7 @@ class Game:
     temp_hand = self.activePlayer.hand
     self.activePlayer.hand = playerToSwapWith.hand
     playerToSwapWith.hand = temp_hand
-    print(f"\t\t{self.activePlayer.name} swapped hands with {playerToSwapWith.name}!")
-
+    Logger.handsSwapped(self.activePlayer.name, playerToSwapWith.name)
 
 
 ### Misc / Helpers
@@ -290,10 +290,10 @@ class Game:
         winningPlayer = player
     
     if winningPlayer:
-      print(f"{winningPlayer.name} wins!")
+      Logger.gameChangingEvent(f"{winningPlayer.name} wins!")
       i = self.players.index(winningPlayer) 
       self.players[i].winCount += 1
-      print(f"{winningPlayer.name} win count: {player.winCount:<{0},}")
+      Logger.gameChangingEvent(f"{winningPlayer.name} win count: {self.players[i].winCount:<{0},}")
       
 
       self.addHandsToDeck()

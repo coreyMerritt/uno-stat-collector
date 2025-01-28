@@ -4,6 +4,7 @@ import sys
 import threading
 import time
 from typing import List
+from utilities.Logger import Logger
 from utilities.Stopwatch import Stopwatch
 from entities.Player import Player
 from entities.Game import Game
@@ -103,16 +104,16 @@ class StatCollector():
   def outputResults():
     total = StatCollector.getTotalGamesPlayed()
 
-    print(f"\n\nTotal Games Played: {total:<{0},}")
+    Logger.info(f"\n\nTotal Games Played: {total:<{0},}")
     for player in StatCollector.players:
-      print(f"\t{player.name:<{19}} {player.winCount:<{15},} [{round((player.winCount / total) * 100, 2):<{5}}%]")
-    print(f"\t{'Draw count':<{19}} {StatCollector.draws:<{15},} [{round((StatCollector.draws / total) * 100, 2):<{5}}%]")
+      Logger.info(f"\t{player.name:<{19}} {player.winCount:<{15},} [{round((player.winCount / total) * 100, 2):<{5}}%]")
+    Logger.info(f"\t{'Draw count':<{19}} {StatCollector.draws:<{15},} [{round((StatCollector.draws / total) * 100, 2):<{5}}%]")
 
     time = StatCollector.stopwatch.getTimeAsString()
-    print(f"\nElapsed Time: {time}")
+    Logger.info(f"\nElapsed Time: {time}")
 
     gamesPerSecond = StatCollector.stopwatch.getGamesPerSecond(total)
-    print(f"Games per second: {gamesPerSecond}")
+    Logger.info(f"Games per second: {gamesPerSecond}")
 
 
   @staticmethod
@@ -127,7 +128,7 @@ class StatCollector():
 
   def playNextRound(game: Game):
     try:
-      print(f"Game #: {StatCollector.getTotalGamesPlayed() + 1}")
+      Logger.info(f"Game #: {StatCollector.getTotalGamesPlayed() + 1}")
       game.startNewGame(2)
     except IndexError as e:
       StatCollector.draws += 1

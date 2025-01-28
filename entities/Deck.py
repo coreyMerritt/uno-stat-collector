@@ -14,6 +14,7 @@ from entities.cards.Swap_Hands import SwapHands
 from entities.cards.All_Players_Draw_Two import AllPlayersDrawTwo
 from entities.cards.All_Players_Draw_Four import AllPlayersDrawFour
 from enums.Card_Number import CardNumber
+from utilities.Logger import Logger
 
 
 
@@ -146,6 +147,6 @@ class Deck:
     if len(self.cards) > 0:
       return self.cards.pop()
     else:
-      print(f"The deck is empty. Shuffling the deck...")
+      Logger.info(f"The deck is empty. Shuffling the deck...")
       self.reloadDeck()
       return self.cards.pop()
