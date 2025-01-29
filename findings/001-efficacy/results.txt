@@ -1,0 +1,35 @@
+We're defining 4 arbitrary bechmarks of efficacy here
+
+Level 1: The point at which any single figure, rounded to the
+hundredths place, is repeated 10 times in a row.
+
+Level 2: The point at which any single figure, rounded to the
+hundredths place, is repeated 100 times in a row.
+
+Level 3: The point at which the final figure in the test, rounded
+to the hundredths place, is repeated 10 times in a row.
+
+Level 4: The point at which the final figure in the test, rounded
+to the hundredths place, is repeated 100 times in a row.
+
+
+Level 1: 
+  - 9,437
+    - We're going to round this to 10k.
+  - 25.80%
+
+Level 2:
+  - 34,414
+    - We'll round this to 40k. 
+  - 25.67%
+
+Level 3:
+  - 114,759
+    - We'll round this to 120k.
+  - 25.37%
+
+Level 4:
+  - 114,889
+    - We'll also round this to 120k.
+  - 25.37%
+

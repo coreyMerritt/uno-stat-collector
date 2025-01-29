@@ -1,0 +1,13 @@
+2025/01/28
+
+The first thing I'm going to try to determine is at what point the
+win percentages start to become stable and static. This is certainly
+a question maths and science have asked and answered... but lets answer
+it again!
+
+I'll be making slight modifications to the code to append a single line
+to a file between every round. This line will contain the win percentage
+of one specific random player. After some millions of games run, we'll
+try to identify the point at which the win rate becomes stable and stale.
+From there, we'll have a firm number of games we want to run every
+test against.
