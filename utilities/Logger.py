@@ -38,7 +38,7 @@ class Logger:
 
   @staticmethod
   def colorPicked(playerName: str, color: CardColor):
-    indent = " " * Logger.tab_size
+    indent = " " * Logger.tab_size * 2
     foreColor = Logger._getForeColor(color)
     backColor = Logger._getBackColor(color)
     color = backColor + foreColor + color.value
@@ -106,7 +106,7 @@ class Logger:
   @staticmethod
   def handsSwapped(playerOne: str, playerTwo: str):
     indent = " " * Logger.tab_size * 2
-    print(indent + f"{playerOne} swaps hands with: {playerTwo}.")
+    print(indent + f"{playerOne} swaps hands with: {playerTwo}")
 
 
 ##### Start Private Methods ######

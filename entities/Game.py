@@ -5,8 +5,6 @@ from typing import List
 from entities.Deck import Deck
 from entities.Card import Card
 from entities.Player import Player
-from entities.players.colorful_colin import ColorfulColin
-from entities.players.random_randy import RandomRandy
 from enums.Card_Color import CardColor
 from enums.Card_Number import CardNumber
 from utilities.Logger import Logger
@@ -21,6 +19,9 @@ class Game:
   faceColor: CardColor
   faceNumber: CardNumber
   turnOrderClockwise: bool
+  drawTwoActive: bool
+  drawFourActive: bool
+  drawCount: int
 
 
 
@@ -36,6 +37,9 @@ class Game:
   def startNewGame(self, deckCount: int):
     self.loadDeck(deckCount)
     self.turnOrderClockwise = True
+    self.drawTwoActive = False
+    self.drawFourActive = False
+    self.drawCount = 0
     self.determineActiveDealer()
     self.determineActivePlayer()
     self.dealStartingHands()
@@ -89,24 +93,55 @@ class Game:
       Logger.cardDealt(nextPlayer.name, card)
 
 
+
   def playUntilWinner(self):
     while not self.isWinner():
       self.takeTurn()
+      self.setNextActivePlayer()
     if self.isWinner():
       self.declareWinner()
 
 
+
   def takeTurn(self):
-    cardBeingPlayed = self.determineCardBeingPlayed()
-    self.playCard(cardBeingPlayed)
-    self.setNextActivePlayer()
+    if self.drawTwoActive:
+      drawTwo = self.activePlayer.playDrawTwoIfAvailable()
+      if drawTwo is not None:
+        self.playCard(drawTwo)
+      else:
+        for i in range(self.drawCount):
+          card = self.deck.draw()
+          self.activePlayer.hand.cards.append(card)
+          Logger.cardDrawn(self.activePlayer.name, card)
+        self.drawTwoActive = False
+        self.drawCount = 0
+
+    elif self.drawFourActive:
+      drawFour = self.activePlayer.playDrawFourIfAvailable()
+      if drawFour is not None:
+        self.playCard(drawFour)
+      else:
+        for i in range(self.drawCount):
+          card = self.deck.draw()
+          self.activePlayer.hand.cards.append(card)
+          Logger.cardDrawn(self.activePlayer.name, card)
+        self.drawFourActive = False
+        self.drawCount = 0
+      
+    else:
+      cardBeingPlayed = self.determineCardBeingPlayed()
+      self.playCard(cardBeingPlayed)
+
 
 
   def determineCardBeingPlayed(self):
-    cardBeingPlayed = self.activePlayer.pickCardToPlay(self.faceColor, self.faceNumber)
+    cardBeingPlayed = self.activePlayer.pickCardToPlay(self)
+    
     while cardBeingPlayed is None:
       cardBeingPlayed = self.activePlayer.drawAndPlay(self.deck, self.faceColor, self.faceNumber)
+    
     return cardBeingPlayed
+
 
 
   def playCard(self, card: Card, system=False):
@@ -116,11 +151,12 @@ class Game:
     else:
       player = self.activeDealer
     
+    player.removeCardFromHand(card)
+    self.executeEffect(card.number, player)
+
     if card.color != CardColor.Black:
-      self.executeEffect(card.number, player)
       self.setFacecard(card, card.color, card.number)
     else:
-      self.executeEffect(card.number, player)
       color = player.pickFaceColor()
       Logger.colorPicked(player.name, color)
       self.setFacecard(card, color, card.number)
@@ -161,6 +197,7 @@ class Game:
           player.hand.cards.append(card)
 
 
+
   def allPlayersDrawTwo(self):
     for player in self.players:
       if player != self.activePlayer:
@@ -168,29 +205,29 @@ class Game:
           card = self.deck.draw()
           Logger.cardDrawn(player.name, card)
           player.hand.cards.append(card)
+
   
 
   def discardAllOfOneColor(self):
     cardsToDiscard = self.activePlayer.discardAllOfOneColor()
+    
     for card in cardsToDiscard:
+      self.activePlayer.removeCardFromHand(card)
       Logger.cardDiscarded(self.activePlayer.name, card)
       self.deck.discard.append(card)
 
 
+
   def drawFour(self):
-    for i in range(4):
-      card = self.deck.draw()
-      player = self.getNextPlayer()
-      player.hand.cards.append(card)
-      Logger.cardDrawn(player.name, card)
+    self.drawFourActive = True
+    self.drawCount += 4
+
 
 
   def drawTwo(self):
-    for i in range(2):
-      card = self.deck.draw()
-      player = self.getNextPlayer()
-      player.hand.cards.append(card)
-      Logger.cardDrawn(player.name, card)
+    self.drawTwoActive = True
+    self.drawCount += 2
+
 
 
   def reverse(self):
@@ -198,6 +235,7 @@ class Game:
       self.turnOrderClockwise = False
     else:
       self.turnOrderClockwise = True
+
 
 
   def shuffleHands(self):
@@ -210,9 +248,11 @@ class Game:
     self.dealHands(cardsInAllHands)
     
 
+
   def skip(self):
     self.activePlayer = self.getNextPlayer()
     Logger.playerSkipped(self.activePlayer.name)
+
 
 
   def swapHands(self):
@@ -227,6 +267,7 @@ class Game:
     self.activePlayer.hand = playerToSwapWith.hand
     playerToSwapWith.hand = temp_hand
     Logger.handsSwapped(self.activePlayer.name, playerToSwapWith.name)
+
 
 
 ### Misc / Helpers

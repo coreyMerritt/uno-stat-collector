@@ -1,12 +1,12 @@
 import random
 from typing import List
+from entities.Game import Game
 from entities.Player import Player
 from enums.Card_Color import CardColor
-from enums.Card_Number import CardNumber
 
 
 ### 001 - Random Randy chooses cards from his hand randomly, as well
-### as picks colors entirely randomly.
+### as picks colors entirely randomly. He's not bright...
 
 
 class RandomRandy(Player):
@@ -40,7 +40,7 @@ class RandomRandy(Player):
     for card in self.hand.cards:
       if card.color == discardColor:
         cardsToDiscard.append(card)
-        self.hand.cards.remove(card)
+        
     return cardsToDiscard
   
 

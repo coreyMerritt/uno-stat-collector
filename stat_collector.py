@@ -4,6 +4,7 @@ import sys
 import threading
 import time
 from typing import List
+from entities.players.tactical_tanner import TacticalTanner
 from utilities.Logger import Logger
 from utilities.Stopwatch import Stopwatch
 from entities.Player import Player
@@ -80,10 +81,12 @@ class StatCollector():
   @staticmethod
   def loadPlayers():
     players = []
+    
     randomRandyCount = 1
     colorfulColinCount = 1
     minimalMindyCount = 1
-    AggressiveAgathaCount = 1
+    aggressiveAgathaCount = 1
+    tacticalTanner = 1
 
     for i in range(randomRandyCount):
       players.append(RandomRandy(f"Randy_{i + 1}"))
@@ -94,10 +97,14 @@ class StatCollector():
     for i in range(minimalMindyCount):
       players.append(MinimalMindy(f"Mindy_{i + 1}"))
     
-    for i in range(AggressiveAgathaCount):
+    for i in range(aggressiveAgathaCount):
       players.append(AggressiveAgatha(f"Agatha_{i + 1}"))
+
+    for i in range(tacticalTanner):
+      players.append(TacticalTanner(f"Tanner_{i + 1}"))
     
     StatCollector.players = players
+  
   
 
   @staticmethod

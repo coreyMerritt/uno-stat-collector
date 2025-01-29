@@ -1,11 +1,7 @@
-import random
-
 from entities.Player import Player
-from enums.Card_Color import CardColor
-from enums.Card_Number import CardNumber
 
 
-### Colorful Colin chooses cards from his hand randomly, but
+### 002 - Colorful Colin chooses cards from his hand randomly, but
 ### picks colors based on what he has the most of.
 
 
