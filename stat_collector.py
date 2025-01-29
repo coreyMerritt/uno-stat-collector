@@ -4,6 +4,7 @@ import sys
 import threading
 import time
 from typing import List
+from config import Config
 from entities.players.tactical_tanner import TacticalTanner
 from utilities.Logger import Logger
 from utilities.Stopwatch import Stopwatch
@@ -51,7 +52,7 @@ class StatCollector():
     if len(sys.argv) > 1:
       StatCollector.games_to_play = int(sys.argv[1])
     else:
-      StatCollector.games_to_play = 1000000000
+      StatCollector.games_to_play = Config.defaults.gameToPlayCount
 
 
 
@@ -81,26 +82,20 @@ class StatCollector():
   @staticmethod
   def loadPlayers():
     players = []
-    
-    randomRandyCount = 1
-    colorfulColinCount = 1
-    minimalMindyCount = 1
-    aggressiveAgathaCount = 1
-    tacticalTanner = 1
 
-    for i in range(randomRandyCount):
+    for i in range(Config.randomRandyCount):
       players.append(RandomRandy(f"Randy_{i + 1}"))
     
-    for i in range(colorfulColinCount):
+    for i in range(Config.colorfulColinCount):
       players.append(ColorfulColin(f"Colin_{i + 1}"))
     
-    for i in range(minimalMindyCount):
+    for i in range(Config.minimalMindyCount):
       players.append(MinimalMindy(f"Mindy_{i + 1}"))
     
-    for i in range(aggressiveAgathaCount):
+    for i in range(Config.aggressiveAgathaCount):
       players.append(AggressiveAgatha(f"Agatha_{i + 1}"))
 
-    for i in range(tacticalTanner):
+    for i in range(Config.tacticalTannerCount):
       players.append(TacticalTanner(f"Tanner_{i + 1}"))
     
     StatCollector.players = players
