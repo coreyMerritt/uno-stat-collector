@@ -63,7 +63,7 @@ Press `enter` again to continue playing.
 ## Requirements
 
 - Python 3.7+
-- Colorama (Installation covered in [Getting Started](#getting-started)
+- Colorama (Installation covered in [Getting Started](#getting-started))
 
 ## Notes
 
